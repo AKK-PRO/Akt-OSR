@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Вход</title>
-</head>
+<head><meta charset="UTF-8"><title>Вход</title></head>
 <body>
     <h2>Авторизация</h2>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+    {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
     <form method="post">
         <label>Логин:<br><input type="text" name="username"></label><br><br>
         <label>Пароль:<br><input type="password" name="password"></label><br><br>

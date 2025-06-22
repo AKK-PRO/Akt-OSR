@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>История актов</title></head>
+<body>
+    <h2>История актов</h2>
+    <a href="{{ url_for('form') }}">← Назад к форме</a>
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Создал</th>
+            <th>Номер</th>
+            <th>Дата</th>
+            <th>Объект</th>
+            <th>Подрядчик</th>
+            <th>Создано</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+            <td>{{ row[5] }}</td>
+            <td>{{ row[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
