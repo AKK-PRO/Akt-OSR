@@ -25,16 +25,25 @@
       margin: 0;
     }
 
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-color);
-    }
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  line-height: 1;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  z-index: 999;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
     a {
       color: var(--button-bg);
