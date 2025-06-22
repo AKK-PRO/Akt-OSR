@@ -2,8 +2,13 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ТОО "КазЕвро Стандарт" – Вход</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: "Segoe UI", sans-serif;
             background-color: white;
@@ -14,57 +19,81 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 0 20px;
         }
 
         .container {
             text-align: center;
+            width: 100%;
             max-width: 600px;
-            padding: 40px;
+            padding: 40px 20px;
         }
 
         .logo {
             max-width: 160px;
+            width: 40%;
             margin-bottom: 20px;
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 2em;
             margin: 10px 0;
         }
 
         p {
-            font-size: 18px;
+            font-size: 1.1em;
             margin-bottom: 30px;
         }
 
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
         .buttons a {
-            text-decoration: none;
-            margin: 10px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .buttons button {
-            padding: 12px 24px;
-            font-size: 16px;
+            width: 100%;
+            padding: 14px;
+            font-size: 1em;
             cursor: pointer;
             background-color: #2196f3;
             border: none;
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             transition: background-color 0.3s;
         }
 
         .buttons button:hover {
             background-color: #1565c0;
         }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .logo {
+                max-width: 120px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ✅ Логотип (замени logo.png в /static) -->
         <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Логотип компании">
 
         <h1>ТОО "КазЕвро Стандарт"</h1>
-        <p>Добро пожаловать в систему</p>
+        <p>Система генерации актов скрытых работ</p>
 
         <div class="buttons">
             <a href="/login/admin"><button>Вход для администратора</button></a>
