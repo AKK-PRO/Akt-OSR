@@ -1,21 +1,24 @@
-from flask import Flask, render_template, request, redirect, session, url_for, send_file
+from flask import Flask, render_template, request, redirect, session, url_for, send_file, send_from_directory
 from docx import Document
 from io import BytesIO
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 import sqlite3
 import datetime
+import os
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# Пользователи
 users = {
     "admin": generate_password_hash("admin123"),
     "worker": generate_password_hash("work2025")
 }
 
+# Создание таблицы в БД
 def init_db():
     conn = sqlite3.connect("akt.db")
     c = conn.cursor()
@@ -33,6 +36,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Сохранить данные в БД
 def save_to_db(data):
     conn = sqlite3.connect("akt.db")
     c = conn.cursor()
@@ -49,8 +53,11 @@ def save_to_db(data):
         datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     ))
     conn.commit()
+    id = c.lastrowid
     conn.close()
+    return id
 
+# Получить всю историю
 def get_history():
     conn = sqlite3.connect("akt.db")
     c = conn.cursor()
@@ -59,6 +66,7 @@ def get_history():
     conn.close()
     return result
 
+# Замена текста в шаблоне
 def replace_text_preserve_style(paragraph, mapping):
     for run in paragraph.runs:
         for key, value in mapping.items():
@@ -89,22 +97,20 @@ def form():
 
     if request.method == "POST":
         fields = {f"{{{field}}}": request.form.get(field, "") for field in [
-            "akt_number", "akt_date", "object_description", "contractor_name",
-            "contractor_rep", "tech_rep", "author_rep", "additional_rep",
-            "work_description", "project_docs", "materials", "proof",
-            "deviations", "start_date", "end_date", "next_work"
+            "akt_number", "akt_date", "object_description", "contractor_name"
         ]}
 
         doc = Document("template.docx")
         for paragraph in doc.paragraphs:
             replace_text_preserve_style(paragraph, fields)
+
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
                         replace_text_preserve_style(paragraph, fields)
 
-        save_to_db({
+        doc_id = save_to_db({
             "created_by": session["user"],
             "akt_number": request.form.get("akt_number", ""),
             "akt_date": request.form.get("akt_date", ""),
@@ -112,10 +118,13 @@ def form():
             "contractor_name": request.form.get("contractor_name", "")
         })
 
-        output = BytesIO()
-        doc.save(output)
-        output.seek(0)
-        return send_file(output, as_attachment=True, download_name="akt.docx")
+        # Сохранить файл
+        filename = f"akt_{doc_id}.docx"
+        save_path = os.path.join("saved_docs", filename)
+        os.makedirs("saved_docs", exist_ok=True)
+        doc.save(save_path)
+
+        return send_file(save_path, as_attachment=True)
 
     return render_template("form.html", username=session['user'])
 
@@ -125,6 +134,10 @@ def history():
         return redirect(url_for("login"))
     rows = get_history()
     return render_template("history.html", rows=rows)
+
+@app.route("/download/<filename>")
+def download(filename):
+    return send_from_directory("saved_docs", filename, as_attachment=True)
 
 if __name__ == "__main__":
     init_db()
