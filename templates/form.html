@@ -5,7 +5,9 @@
     <title>Акт скрытых работ</title>
 </head>
 <body>
-    <h2>Форма для акта скрытых работ</h2>
+    <h2>Здравствуйте, {{ username }}!</h2>
+    <a href="{{ url_for('logout') }}">Выйти</a>
+    <hr>
     <form method="post">
         <label>Номер акта:<br><input type="text" name="akt_number" style="width:400px;"></label><br><br>
         <label>Дата акта:<br><input type="text" name="akt_date" style="width:400px;"></label><br><br>
@@ -20,9 +22,9 @@
         <label>Материалы:<br><input type="text" name="materials" style="width:400px;"></label><br><br>
         <label>Доказательства:<br><input type="text" name="proof" style="width:400px;"></label><br><br>
         <label>Отклонения:<br><input type="text" name="deviations" style="width:400px;"></label><br><br>
-        <label>Дата начала работ:<br><input type="text" name="start_date" style="width:400px;"></label><br><br>
-        <label>Дата окончания работ:<br><input type="text" name="end_date" style="width:400px;"></label><br><br>
-        <label>Последующие работы:<br><input type="text" name="next_work" style="width:400px;"></label><br><br>
+        <label>Дата начала:<br><input type="text" name="start_date" style="width:400px;"></label><br><br>
+        <label>Дата окончания:<br><input type="text" name="end_date" style="width:400px;"></label><br><br>
+        <label>Следующие работы:<br><input type="text" name="next_work" style="width:400px;"></label><br><br>
         <button type="submit">Сформировать акт</button>
     </form>
 </body>

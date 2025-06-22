@@ -1,2 +1,4 @@
 flask
+flask-session
 python-docx
+werkzeug
