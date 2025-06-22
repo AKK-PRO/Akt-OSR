@@ -6,7 +6,8 @@
 </head>
 <body>
     <h2>Здравствуйте, {{ username }}!</h2>
-    <a href="{{ url_for('logout') }}">Выйти</a>
+    <a href="{{ url_for('logout') }}">Выйти</a> |
+    <a href="{{ url_for('history') }}">История актов</a>
     <hr>
     <form method="post">
         <label>Номер акта:<br><input type="text" name="akt_number" style="width:400px;"></label><br><br>
