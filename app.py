@@ -14,6 +14,12 @@ app.secret_key = "supersecretkey"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+def save_signature_base64(data_url, path):
+    header, encoded = data_url.split(",", 1)
+    binary_data = base64.b64decode(encoded)
+    image = Image.open(BytesIO(binary_data))
+    image.save(path, "PNG")
+
 # PostgreSQL config
 DB_CONFIG = {
     "host": "dpg-d1bto73e5dus73evbl80-a",
