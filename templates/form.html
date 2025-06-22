@@ -28,25 +28,25 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-.theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  line-height: 1;
-  text-align: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-color);
-  z-index: 999;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      line-height: 1;
+      text-align: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-color);
+      z-index: 999;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .form-container {
       max-width: 800px;
@@ -70,8 +70,15 @@
       font-size: 15px;
     }
 
+    canvas {
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 150px;
+      margin-top: 10px;
+    }
+
     button {
-      margin-top: 30px;
+      margin-top: 20px;
       width: 100%;
       padding: 14px;
       font-size: 16px;
@@ -127,11 +134,30 @@
       </label>
       {% endfor %}
 
-      <button type="submit">Сформировать акт</button>
+      <label>Подпись технадзора:</label>
+      <canvas id="signature_tech"></canvas>
+      <input type="hidden" name="signature_tech_data" id="signature_tech_data">
+      <button type="button" onclick="techPad.clear()">Очистить подпись технадзора</button>
+
+      <label>Подпись авторского надзора:</label>
+      <canvas id="signature_author"></canvas>
+      <input type="hidden" name="signature_author_data" id="signature_author_data">
+      <button type="button" onclick="authorPad.clear()">Очистить подпись авторского надзора</button>
+
+      <button type="submit" onclick="saveSignatures()">Сформировать акт</button>
     </form>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
   <script>
+    const techPad = new SignaturePad(document.getElementById("signature_tech"));
+    const authorPad = new SignaturePad(document.getElementById("signature_author"));
+
+    function saveSignatures() {
+      document.getElementById("signature_tech_data").value = techPad.isEmpty() ? "" : techPad.toDataURL();
+      document.getElementById("signature_author_data").value = authorPad.isEmpty() ? "" : authorPad.toDataURL();
+    }
+
     const btn = document.querySelector(".theme-toggle");
     function toggleTheme() {
       document.body.classList.toggle("dark");
@@ -139,6 +165,7 @@
       btn.textContent = isDark ? "☀️" : "🌙";
       localStorage.setItem("theme", isDark ? "dark" : "light");
     }
+
     window.addEventListener("DOMContentLoaded", () => {
       const saved = localStorage.getItem("theme");
       if (saved === "dark") {
