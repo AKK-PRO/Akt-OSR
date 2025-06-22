@@ -45,9 +45,14 @@
         }
 
         .logo {
-            max-width: 160px;
-            width: 40%;
-            margin-bottom: 20px;
+          max-width: 160px;
+          width: 40%;
+          margin-bottom: 20px;
+          transition: filter 0.3s;
+        }
+
+        body.dark .logo {
+          filter: invert(1);
         }
 
         h1 {
