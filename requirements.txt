@@ -2,3 +2,4 @@ flask
 flask-session
 python-docx
 werkzeug
+psycopg2-binary
