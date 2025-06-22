@@ -13,6 +13,7 @@
             <th>Объект</th>
             <th>Подрядчик</th>
             <th>Создано</th>
+            <th>Файл</th>
         </tr>
         {% for row in rows %}
         <tr>
@@ -23,6 +24,7 @@
             <td>{{ row[4] }}</td>
             <td>{{ row[5] }}</td>
             <td>{{ row[6] }}</td>
+            <td><a href="{{ url_for('download', filename='akt_' ~ row[0] ~ '.docx') }}">Скачать</a></td>
         </tr>
         {% endfor %}
     </table>
