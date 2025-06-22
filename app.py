@@ -1,10 +1,11 @@
-from PIL import Image
-import base64
 from flask import Flask, render_template, request, redirect, session, url_for, send_file, send_from_directory
 from docx import Document
+from docx.shared import Mm
 from io import BytesIO
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
+from PIL import Image
+import base64
 import psycopg2
 import os
 import datetime
@@ -13,12 +14,6 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-def save_signature_base64(data_url, path):
-    header, encoded = data_url.split(",", 1)
-    binary_data = base64.b64decode(encoded)
-    image = Image.open(BytesIO(binary_data))
-    image.save(path, "PNG")
 
 # PostgreSQL config
 DB_CONFIG = {
@@ -43,6 +38,12 @@ users = {
     "admin": generate_password_hash("admin123"),
     "worker": generate_password_hash("work2025")
 }
+
+def save_signature_base64(data_url, path):
+    header, encoded = data_url.split(",", 1)
+    binary_data = base64.b64decode(encoded)
+    image = Image.open(BytesIO(binary_data))
+    image.save(path, "PNG")
 
 @app.route("/")
 def index():
@@ -127,29 +128,29 @@ def form():
     if "user" not in session:
         return redirect(url_for("index"))
 
-if request.method == "POST":
-    fields = {f"{{{field}}}": request.form.get(field, "") for field in [
-        "akt_number", "akt_date", "object_description", "contractor_name",
-        "contractor_rep", "tech_rep", "author_rep", "additional_rep",
-        "work_description", "project_docs", "materials", "proof",
-        "deviations", "start_date", "end_date", "next_work"
-    ]}
+    if request.method == "POST":
+        fields = {f"{{{field}}}": request.form.get(field, "") for field in [
+            "akt_number", "akt_date", "object_description", "contractor_name",
+            "contractor_rep", "tech_rep", "author_rep", "additional_rep",
+            "work_description", "project_docs", "materials", "proof",
+            "deviations", "start_date", "end_date", "next_work"
+        ]}
 
-    # Подписи
-    akt_number = request.form.get("akt_number", "akt")
-    tech_data = request.form.get("signature_tech_data")
-    author_data = request.form.get("signature_author_data")
+        akt_number = request.form.get("akt_number", "akt")
+        tech_data = request.form.get("signature_tech_data")
+        author_data = request.form.get("signature_author_data")
 
-    tech_path = f"signatures/tech_{akt_number}.png"
-    author_path = f"signatures/author_{akt_number}.png"
-    os.makedirs("signatures", exist_ok=True)
+        tech_path = f"signatures/tech_{akt_number}.png"
+        author_path = f"signatures/author_{akt_number}.png"
+        os.makedirs("signatures", exist_ok=True)
 
-    if tech_data:
-        save_signature_base64(tech_data, tech_path)
-    if author_data:
-        save_signature_base64(author_data, author_path)
+        if tech_data:
+            save_signature_base64(tech_data, tech_path)
+        if author_data:
+            save_signature_base64(author_data, author_path)
 
         doc = Document("template.docx")
+
         for paragraph in doc.paragraphs:
             replace_text_preserve_style(paragraph, fields)
 
@@ -158,17 +159,17 @@ if request.method == "POST":
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
                         replace_text_preserve_style(paragraph, fields)
-# Вставка подписей
-    for p in doc.paragraphs:
-        if "{signature_tech}" in p.text:
-            p.clear()
-            run = p.add_run()
-            run.add_picture(tech_path, width=Mm(40))
-        if "{signature_author}" in p.text:
-            p.clear()
-            run = p.add_run()
-            run.add_picture(author_path, width=Mm(40))
-            
+
+        for p in doc.paragraphs:
+            if "{signature_tech}" in p.text:
+                p.clear()
+                run = p.add_run()
+                run.add_picture(tech_path, width=Mm(40))
+            if "{signature_author}" in p.text:
+                p.clear()
+                run = p.add_run()
+                run.add_picture(author_path, width=Mm(40))
+
         doc_id = save_to_db({
             "created_by": session["user"],
             "akt_number": request.form.get("akt_number", ""),
@@ -184,7 +185,7 @@ if request.method == "POST":
 
         return send_file(save_path, as_attachment=True)
 
-    return render_template("form.html", username=session['user'])
+    return render_template("form.html", username=session['user'], role=session['role'])
 
 @app.route("/history")
 def history():
