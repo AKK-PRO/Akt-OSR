@@ -1,67 +1,98 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>История актов</title>
-    <style>
-        :root {
-            --bg-color: white;
-            --text-color: #1d3557;
-            --button-bg: #2196f3;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>История актов</title>
+  <style>
+    :root {
+      --bg-color: white;
+      --text-color: #1d3557;
+      --button-bg: #2196f3;
+    }
 
-        body.dark {
-            --bg-color: #121212;
-            --text-color: #eeeeee;
-            --button-bg: #1e88e5;
-        }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #eeeeee;
+      --button-bg: #1e88e5;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: "Segoe UI", sans-serif;
-            padding: 30px;
-            margin: 0;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: "Segoe UI", sans-serif;
+      padding: 30px;
+      margin: 0;
+    }
 
-        a {
-            color: var(--button-bg);
-            text-decoration: none;
-        }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-color);
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    a {
+      color: var(--button-bg);
+      text-decoration: none;
+    }
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
 
-        th {
-            background-color: var(--button-bg);
-            color: white;
-        }
-    </style>
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--button-bg);
+      color: white;
+    }
+  </style>
 </head>
 <body>
-    <a href="{{ url_for('form') }}">← Назад к форме</a>
-    <h2>История актов</h2>
-    <table>
-        <tr>
-            <th>ID</th><th>Создал</th><th>Номер</th><th>Дата</th><th>Объект</th><th>Подрядчик</th><th>Создано</th><th>Файл</th>
-        </tr>
-        {% for row in rows %}
-        <tr>
-            <td>{{ row[0] }}</td><td>{{ row[1] }}</td><td>{{ row[2] }}</td><td>{{ row[3] }}</td>
-            <td>{{ row[4] }}</td><td>{{ row[5] }}</td><td>{{ row[6] }}</td>
-            <td><a href="{{ url_for('download', filename='akt_' ~ row[0] ~ '.docx') }}">Скачать</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+  <a href="{{ url_for('form') }}">← Назад к форме</a>
+  <h2>История актов</h2>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Создал</th><th>Номер</th><th>Дата</th><th>Объект</th><th>Подрядчик</th><th>Создано</th><th>Файл</th>
+    </tr>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row[0] }}</td><td>{{ row[1] }}</td><td>{{ row[2] }}</td><td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td><td>{{ row[5] }}</td><td>{{ row[6] }}</td>
+      <td><a href="{{ url_for('download', filename='akt_' ~ row[0] ~ '.docx') }}">Скачать</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <script>
+    const btn = document.querySelector(".theme-toggle");
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      btn.textContent = isDark ? "☀️" : "🌙";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") {
+        document.body.classList.add("dark");
+        btn.textContent = "☀️";
+      }
+    });
+  </script>
 </body>
 </html>
