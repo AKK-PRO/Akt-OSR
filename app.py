@@ -97,7 +97,10 @@ def form():
 
     if request.method == "POST":
         fields = {f"{{{field}}}": request.form.get(field, "") for field in [
-            "akt_number", "akt_date", "object_description", "contractor_name"
+            "akt_number", "akt_date", "object_description", "contractor_name",
+            "contractor_rep", "tech_rep", "author_rep", "additional_rep",
+            "work_description", "project_docs", "materials", "proof",
+            "deviations", "start_date", "end_date", "next_work"
         ]}
 
         doc = Document("template.docx")
