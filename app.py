@@ -158,7 +158,17 @@ if request.method == "POST":
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
                         replace_text_preserve_style(paragraph, fields)
-
+# Вставка подписей
+    for p in doc.paragraphs:
+        if "{signature_tech}" in p.text:
+            p.clear()
+            run = p.add_run()
+            run.add_picture(tech_path, width=Mm(40))
+        if "{signature_author}" in p.text:
+            p.clear()
+            run = p.add_run()
+            run.add_picture(author_path, width=Mm(40))
+            
         doc_id = save_to_db({
             "created_by": session["user"],
             "akt_number": request.form.get("akt_number", ""),
