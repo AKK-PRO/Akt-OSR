@@ -3,14 +3,32 @@ from docx import Document
 from io import BytesIO
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
-import sqlite3
-import datetime
+import psycopg2
 import os
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+# PostgreSQL config
+DB_CONFIG = {
+    "host": "dpg-d1bto73e5dus73evbl80-a",
+    "dbname": "aktdb",
+    "user": "aktuser",
+    "password": "Z7MAXy7n6KUtc3EcbwsY8JevdBINASlc",
+    "port": 5432
+}
+
+def get_connection():
+    return psycopg2.connect(
+        host=DB_CONFIG["host"],
+        dbname=DB_CONFIG["dbname"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
+        port=DB_CONFIG["port"]
+    )
 
 # Пользователи
 users = {
@@ -18,32 +36,32 @@ users = {
     "worker": generate_password_hash("work2025")
 }
 
-# Создание таблицы в БД
 def init_db():
-    conn = sqlite3.connect("akt.db")
-    c = conn.cursor()
-    c.execute("""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS akt_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             created_by TEXT,
             akt_number TEXT,
             akt_date TEXT,
             object_description TEXT,
             contractor_name TEXT,
             created_at TEXT
-        )
+        );
     """)
     conn.commit()
+    cur.close()
     conn.close()
 
-# Сохранить данные в БД
 def save_to_db(data):
-    conn = sqlite3.connect("akt.db")
-    c = conn.cursor()
-    c.execute("""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
         INSERT INTO akt_history (
             created_by, akt_number, akt_date, object_description, contractor_name, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?)
+        ) VALUES (%s, %s, %s, %s, %s, %s)
+        RETURNING id;
     """, (
         data["created_by"],
         data["akt_number"],
@@ -52,21 +70,21 @@ def save_to_db(data):
         data["contractor_name"],
         datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     ))
+    new_id = cur.fetchone()[0]
     conn.commit()
-    id = c.lastrowid
+    cur.close()
     conn.close()
-    return id
+    return new_id
 
-# Получить всю историю
 def get_history():
-    conn = sqlite3.connect("akt.db")
-    c = conn.cursor()
-    c.execute("SELECT * FROM akt_history ORDER BY id DESC")
-    result = c.fetchall()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM akt_history ORDER BY id DESC")
+    result = cur.fetchall()
+    cur.close()
     conn.close()
     return result
 
-# Замена текста в шаблоне
 def replace_text_preserve_style(paragraph, mapping):
     for run in paragraph.runs:
         for key, value in mapping.items():
@@ -121,7 +139,6 @@ def form():
             "contractor_name": request.form.get("contractor_name", "")
         })
 
-        # Сохранить файл
         filename = f"akt_{doc_id}.docx"
         save_path = os.path.join("saved_docs", filename)
         os.makedirs("saved_docs", exist_ok=True)
