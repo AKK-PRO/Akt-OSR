@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание акта с подписями</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 150px;
+        }
+        .signature-block {
+            margin-top: 20px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Создание акта с подписями</h2>
+        <form method="post" enctype="multipart/form-data">
+            <label>Номер акта:
+                <input type="text" name="akt_number" required>
+            </label>
+
+            <!-- Подпись технадзора -->
+            <div class="signature-block">
+                <label>Подпись технадзора:</label>
+                <canvas id="signature_tech"></canvas>
+                <div class="buttons">
+                    <button type="button" onclick="clearPad(techPad)">Очистить</button>
+                </div>
+                <input type="hidden" name="signature_tech_data" id="signature_tech_data">
+            </div>
+
+            <!-- Подпись авторского надзора -->
+            <div class="signature-block">
+                <label>Подпись авторского надзора:</label>
+                <canvas id="signature_author"></canvas>
+                <div class="buttons">
+                    <button type="button" onclick="clearPad(authorPad)">Очистить</button>
+                </div>
+                <input type="hidden" name="signature_author_data" id="signature_author_data">
+            </div>
+
+            <button type="submit" onclick="saveSignatures()">Сформировать акт</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
+    <script>
+        const techCanvas = document.getElementById("signature_tech");
+        const authorCanvas = document.getElementById("signature_author");
+        const techPad = new SignaturePad(techCanvas);
+        const authorPad = new SignaturePad(authorCanvas);
+
+        function clearPad(pad) {
+            pad.clear();
+        }
+
+        function saveSignatures() {
+            document.getElementById("signature_tech_data").value = techPad.toDataURL();
+            document.getElementById("signature_author_data").value = authorPad.toDataURL();
+        }
+    </script>
+</body>
+</html>
