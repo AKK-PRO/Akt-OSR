@@ -1,143 +1,142 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание акта</title>
-    <style>
-        :root {
-            --bg-color: white;
-            --text-color: #1d3557;
-            --button-bg: #2196f3;
-            --input-bg: #f1f1f1;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Создание акта</title>
+  <style>
+    :root {
+      --bg-color: white;
+      --text-color: #1d3557;
+      --button-bg: #2196f3;
+      --input-bg: #f1f1f1;
+    }
 
-        body.dark {
-            --bg-color: #121212;
-            --text-color: #eeeeee;
-            --button-bg: #1e88e5;
-            --input-bg: #2c2c2c;
-        }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #eeeeee;
+      --button-bg: #1e88e5;
+      --input-bg: #2c2c2c;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: "Segoe UI", sans-serif;
-            padding: 40px 20px;
-            margin: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: "Segoe UI", sans-serif;
+      padding: 40px 20px;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        .form-container {
-            max-width: 800px;
-            margin: auto;
-        }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-color);
+    }
 
-        label {
-            display: block;
-            margin-top: 20px;
-            font-weight: bold;
-        }
+    .form-container {
+      max-width: 800px;
+      margin: auto;
+    }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-top: 6px;
-            background-color: var(--input-bg);
-            border: none;
-            border-radius: 6px;
-            color: var(--text-color);
-            font-size: 15px;
-        }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
 
-        button {
-            margin-top: 30px;
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            background-color: var(--button-bg);
-            border: none;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      background-color: var(--input-bg);
+      border: none;
+      border-radius: 6px;
+      color: var(--text-color);
+      font-size: 15px;
+    }
 
-        .top-links {
-            margin-bottom: 30px;
-        }
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background-color: var(--button-bg);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-        .top-links a {
-            margin-right: 15px;
-            text-decoration: none;
-            color: var(--button-bg);
-        }
+    .top-links {
+      margin-bottom: 30px;
+    }
 
-        h2 {
-            margin-bottom: 10px;
-        }
-    </style>
+    .top-links a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: var(--button-bg);
+    }
+  </style>
 </head>
 <body>
-<div class="form-container">
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  <div class="form-container">
     <div class="top-links">
-        <span>Пользователь: {{ username }} (роль: {{ role }})</span><br>
-        <a href="{{ url_for('logout') }}">Выйти</a> |
-        <a href="{{ url_for('history') }}">История актов</a>
+      <span>Пользователь: {{ username }} (роль: {{ role }})</span><br />
+      <a href="{{ url_for('logout') }}">Выйти</a> |
+      <a href="{{ url_for('history') }}">История актов</a>
     </div>
 
     <h2>Создание акта скрытых работ</h2>
     <form method="post">
-        <label>Номер акта:
-            <input type="text" name="akt_number">
-        </label>
-        <label>Дата акта:
-            <input type="text" name="akt_date">
-        </label>
-        <label>Объект:
-            <input type="text" name="object_description">
-        </label>
-        <label>Подрядчик:
-            <input type="text" name="contractor_name">
-        </label>
-        <label>Представитель подрядчика:
-            <input type="text" name="contractor_rep">
-        </label>
-        <label>Технадзор:
-            <input type="text" name="tech_rep">
-        </label>
-        <label>Авторский надзор:
-            <input type="text" name="author_rep">
-        </label>
-        <label>Доп. участник:
-            <input type="text" name="additional_rep">
-        </label>
-        <label>Описание работ:
-            <input type="text" name="work_description">
-        </label>
-        <label>Проектная документация:
-            <input type="text" name="project_docs">
-        </label>
-        <label>Материалы:
-            <input type="text" name="materials">
-        </label>
-        <label>Дополнительные данные:
-            <input type="text" name="proof">
-        </label>
-        <label>Отклонения:
-            <input type="text" name="deviations">
-        </label>
-        <label>Дата начала:
-            <input type="text" name="start_date">
-        </label>
-        <label>Дата окончания:
-            <input type="text" name="end_date">
-        </label>
-        <label>Следующие работы:
-            <input type="text" name="next_work">
-        </label>
+      {% for field in [
+        ["akt_number", "Номер акта"],
+        ["akt_date", "Дата акта"],
+        ["object_description", "Объект"],
+        ["contractor_name", "Подрядчик"],
+        ["contractor_rep", "Представитель подрядчика"],
+        ["tech_rep", "Технадзор"],
+        ["author_rep", "Авторский надзор"],
+        ["additional_rep", "Доп. участник"],
+        ["work_description", "Описание работ"],
+        ["project_docs", "Проектная документация"],
+        ["materials", "Материалы"],
+        ["proof", "Дополнительные данные"],
+        ["deviations", "Отклонения"],
+        ["start_date", "Дата начала"],
+        ["end_date", "Дата окончания"],
+        ["next_work", "Следующие работы"]
+      ] %}
+      <label>{{ field[1] }}:
+        <input type="text" name="{{ field[0] }}" />
+      </label>
+      {% endfor %}
 
-        <button type="submit">Сформировать акт</button>
+      <button type="submit">Сформировать акт</button>
     </form>
-</div>
+  </div>
+
+  <script>
+    const btn = document.querySelector(".theme-toggle");
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      btn.textContent = isDark ? "☀️" : "🌙";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") {
+        document.body.classList.add("dark");
+        btn.textContent = "☀️";
+      }
+    });
+  </script>
 </body>
 </html>
