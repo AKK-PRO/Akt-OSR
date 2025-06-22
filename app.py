@@ -36,6 +36,29 @@ users = {
     "worker": generate_password_hash("work2025")
 }
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/login/<role>", methods=["GET", "POST"])
+def login(role):
+    role_name = "Администратор" if role == "admin" else "Сотрудник"
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if username in users and check_password_hash(users[username], password):
+            session["user"] = username
+            session["role"] = role
+            return redirect(url_for("form"))
+        else:
+            return render_template("login.html", error="Неверный логин или пароль", role_name=role_name)
+    return render_template("login.html", role_name=role_name)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
+
 def init_db():
     conn = get_connection()
     cur = conn.cursor()
@@ -91,27 +114,10 @@ def replace_text_preserve_style(paragraph, mapping):
             if key in run.text:
                 run.text = run.text.replace(key, value)
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        if username in users and check_password_hash(users[username], password):
-            session["user"] = username
-            return redirect(url_for("form"))
-        else:
-            return render_template("login.html", error="Неверный логин или пароль")
-    return render_template("login.html")
-
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect(url_for("login"))
-
-@app.route("/", methods=["GET", "POST"])
+@app.route("/form", methods=["GET", "POST"])
 def form():
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("index"))
 
     if request.method == "POST":
         fields = {f"{{{field}}}": request.form.get(field, "") for field in [
