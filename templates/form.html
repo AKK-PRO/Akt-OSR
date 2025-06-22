@@ -1,32 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Акт скрытых работ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание акта</title>
+    <style>
+        :root {
+            --bg-color: white;
+            --text-color: #1d3557;
+            --button-bg: #2196f3;
+            --input-bg: #f1f1f1;
+        }
+
+        body.dark {
+            --bg-color: #121212;
+            --text-color: #eeeeee;
+            --button-bg: #1e88e5;
+            --input-bg: #2c2c2c;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Segoe UI", sans-serif;
+            padding: 40px 20px;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 30px;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            background-color: var(--button-bg);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .top-links {
+            margin-bottom: 30px;
+        }
+
+        .top-links a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: var(--button-bg);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Здравствуйте, {{ username }}!</h2>
-    <a href="{{ url_for('logout') }}">Выйти</a> |
-    <a href="{{ url_for('history') }}">История актов</a>
-    <hr>
+<div class="form-container">
+    <div class="top-links">
+        <span>Пользователь: {{ username }} (роль: {{ role }})</span><br>
+        <a href="{{ url_for('logout') }}">Выйти</a> |
+        <a href="{{ url_for('history') }}">История актов</a>
+    </div>
+
+    <h2>Создание акта скрытых работ</h2>
     <form method="post">
-        <label>Номер акта:<br><input type="text" name="akt_number" style="width:400px;"></label><br><br>
-        <label>Дата акта:<br><input type="text" name="akt_date" style="width:400px;"></label><br><br>
-        <label>Объект:<br><input type="text" name="object_description" style="width:400px;"></label><br><br>
-        <label>Подрядчик:<br><input type="text" name="contractor_name" style="width:400px;"></label><br><br>
-        <label>Представитель подрядчика:<br><input type="text" name="contractor_rep" style="width:400px;"></label><br><br>
-        <label>Технадзор:<br><input type="text" name="tech_rep" style="width:400px;"></label><br><br>
-        <label>Авторский надзор:<br><input type="text" name="author_rep" style="width:400px;"></label><br><br>
-        <label>Доп. участник:<br><input type="text" name="additional_rep" style="width:400px;"></label><br><br>
-        <label>Описание работ:<br><input type="text" name="work_description" style="width:400px;"></label><br><br>
-        <label>Проектная документация:<br><input type="text" name="project_docs" style="width:400px;"></label><br><br>
-        <label>Материалы:<br><input type="text" name="materials" style="width:400px;"></label><br><br>
-        <label>Дополнительные данные:<br><input type="text" name="proof" style="width:400px;"></label><br><br>
-        <label>Отклонения:<br><input type="text" name="deviations" style="width:400px;"></label><br><br>
-        <label>Дата начала:<br><input type="text" name="start_date" style="width:400px;"></label><br><br>
-        <label>Дата окончания:<br><input type="text" name="end_date" style="width:400px;"></label><br><br>
-        <label>Следующие работы:<br><input type="text" name="next_work" style="width:400px;"></label><br><br>
+        <label>Номер акта:
+            <input type="text" name="akt_number">
+        </label>
+        <label>Дата акта:
+            <input type="text" name="akt_date">
+        </label>
+        <label>Объект:
+            <input type="text" name="object_description">
+        </label>
+        <label>Подрядчик:
+            <input type="text" name="contractor_name">
+        </label>
+        <label>Представитель подрядчика:
+            <input type="text" name="contractor_rep">
+        </label>
+        <label>Технадзор:
+            <input type="text" name="tech_rep">
+        </label>
+        <label>Авторский надзор:
+            <input type="text" name="author_rep">
+        </label>
+        <label>Доп. участник:
+            <input type="text" name="additional_rep">
+        </label>
+        <label>Описание работ:
+            <input type="text" name="work_description">
+        </label>
+        <label>Проектная документация:
+            <input type="text" name="project_docs">
+        </label>
+        <label>Материалы:
+            <input type="text" name="materials">
+        </label>
+        <label>Дополнительные данные:
+            <input type="text" name="proof">
+        </label>
+        <label>Отклонения:
+            <input type="text" name="deviations">
+        </label>
+        <label>Дата начала:
+            <input type="text" name="start_date">
+        </label>
+        <label>Дата окончания:
+            <input type="text" name="end_date">
+        </label>
+        <label>Следующие работы:
+            <input type="text" name="next_work">
+        </label>
+
         <button type="submit">Сформировать акт</button>
     </form>
+</div>
 </body>
 </html>
