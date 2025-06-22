@@ -127,13 +127,27 @@ def form():
     if "user" not in session:
         return redirect(url_for("index"))
 
-    if request.method == "POST":
-        fields = {f"{{{field}}}": request.form.get(field, "") for field in [
-            "akt_number", "akt_date", "object_description", "contractor_name",
-            "contractor_rep", "tech_rep", "author_rep", "additional_rep",
-            "work_description", "project_docs", "materials", "proof",
-            "deviations", "start_date", "end_date", "next_work"
-        ]}
+if request.method == "POST":
+    fields = {f"{{{field}}}": request.form.get(field, "") for field in [
+        "akt_number", "akt_date", "object_description", "contractor_name",
+        "contractor_rep", "tech_rep", "author_rep", "additional_rep",
+        "work_description", "project_docs", "materials", "proof",
+        "deviations", "start_date", "end_date", "next_work"
+    ]}
+
+    # Подписи
+    akt_number = request.form.get("akt_number", "akt")
+    tech_data = request.form.get("signature_tech_data")
+    author_data = request.form.get("signature_author_data")
+
+    tech_path = f"signatures/tech_{akt_number}.png"
+    author_path = f"signatures/author_{akt_number}.png"
+    os.makedirs("signatures", exist_ok=True)
+
+    if tech_data:
+        save_signature_base64(tech_data, tech_path)
+    if author_data:
+        save_signature_base64(author_data, author_path)
 
         doc = Document("template.docx")
         for paragraph in doc.paragraphs:
