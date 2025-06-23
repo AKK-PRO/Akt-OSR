@@ -35,8 +35,8 @@ def get_connection():
 
 # Пользователи
 users = {
-    "admin": generate_password_hash(""),
-    "worker": generate_password_hash("work2025")
+    "admin": generate_password_hash("1"),
+    "worker": generate_password_hash("2")
 }
 
 def save_signature_base64(data_url, path):
