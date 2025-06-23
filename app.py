@@ -63,6 +63,12 @@ def login(role):
             return render_template("login.html", error="Неверный логин или пароль", role_name=role_name)
     return render_template("login.html", role_name=role_name)
 
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect(url_for("index"))
+    return render_template("dashboard.html", username=session["user"], role=session["role"])
+
 @app.route("/logout")
 def logout():
     session.clear()
