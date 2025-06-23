@@ -129,6 +129,17 @@ def replace_text_preserve_style(paragraph, mapping):
             if key in run.text:
                 run.text = run.text.replace(key, value)
 
+@app.route("/form_struct", methods=["GET", "POST"])
+def form_struct():
+    if "user" not in session:
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        # Здесь будет обработка формы
+        return "<h2>Форма приёмки конструкций отправлена (в разработке)</h2>"
+
+    return render_template("form_struct.html", username=session['user'], role=session['role'])
+
 @app.route("/form", methods=["GET", "POST"])
 def form():
     if "user" not in session:
