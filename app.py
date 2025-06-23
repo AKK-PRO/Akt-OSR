@@ -143,8 +143,7 @@ def form():
         tech_path = f"signatures/tech_{akt_number}.png"
         author_path = f"signatures/author_{akt_number}.png"
         os.makedirs("signatures", exist_ok=True)
-        print("Технадзор:", tech_data[:30])
-        print("Авторский надзор:", author_data[:30])
+
         if tech_data:
             save_signature_base64(tech_data, tech_path)
         if author_data:
