@@ -110,7 +110,7 @@
     </div>
 
     <h2>Создание акта скрытых работ</h2>
-    <form method="post">
+    <form method="post" onsubmit="saveSignatures()">
       {% for field in [
         ["akt_number", "Номер акта"],
         ["akt_date", "Дата акта"],
@@ -144,7 +144,7 @@
       <input type="hidden" name="signature_author_data" id="signature_author_data">
       <button type="button" onclick="authorPad.clear()">Очистить подпись авторского надзора</button>
 
-      <button type="submit" onclick="saveSignatures()">Сформировать акт</button>
+      <button type="submit">Сформировать акт</button>
     </form>
   </div>
 
