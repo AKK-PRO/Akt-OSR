@@ -151,15 +151,16 @@ def form():
 
         doc = Document("template.docx")
 
+        # Замена текстовых плейсхолдеров
         for paragraph in doc.paragraphs:
             replace_text_preserve_style(paragraph, fields)
-
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
                         replace_text_preserve_style(paragraph, fields)
 
+        # Вставка подписей в обычных абзацах
         for p in doc.paragraphs:
             if "{signature_tech}" in p.text:
                 p.clear()
@@ -170,6 +171,21 @@ def form():
                 run = p.add_run()
                 run.add_picture(author_path, width=Mm(40))
 
+        # Вставка подписей в таблицах
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    for p in cell.paragraphs:
+                        if "{signature_tech}" in p.text:
+                            p.clear()
+                            run = p.add_run()
+                            run.add_picture(tech_path, width=Mm(40))
+                        if "{signature_author}" in p.text:
+                            p.clear()
+                            run = p.add_run()
+                            run.add_picture(author_path, width=Mm(40))
+
+        # Сохраняем акт и возвращаем пользователю
         doc_id = save_to_db({
             "created_by": session["user"],
             "akt_number": request.form.get("akt_number", ""),
