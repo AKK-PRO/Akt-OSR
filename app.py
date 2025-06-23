@@ -58,7 +58,7 @@ def login(role):
         if username in users and check_password_hash(users[username], password):
             session["user"] = username
             session["role"] = role
-            return redirect(url_for("form"))
+            return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Неверный логин или пароль", role_name=role_name)
     return render_template("login.html", role_name=role_name)
