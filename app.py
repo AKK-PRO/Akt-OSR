@@ -35,7 +35,7 @@ def get_connection():
 
 # Пользователи
 users = {
-    "admin": generate_password_hash("admin123"),
+    "admin": generate_password_hash(""),
     "worker": generate_password_hash("work2025")
 }
 
