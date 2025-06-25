@@ -19,12 +19,21 @@
       --input-bg: #2c2c2c;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
       font-family: "Segoe UI", sans-serif;
-      padding: 40px 20px;
       margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
       transition: background-color 0.3s, color 0.3s;
     }
 
@@ -49,8 +58,8 @@
     }
 
     .form-container {
+      width: 100%;
       max-width: 800px;
-      margin: auto;
     }
 
     label {
@@ -98,6 +107,13 @@
       text-decoration: none;
       color: var(--button-bg);
     }
+
+    @media (max-width: 600px) {
+      button {
+        font-size: 15px;
+        padding: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -105,7 +121,7 @@
   <div class="form-container">
     <div class="top-links">
       <span>Пользователь: {{ username }} (роль: {{ role }})</span><br />
-      <a href="{{ url_for('dashboard') }}">⬅ Назад в меню</a>|
+      <a href="{{ url_for('dashboard') }}">⬅ Назад в меню</a> |
       <a href="{{ url_for('logout') }}">Выйти</a> |
       <a href="{{ url_for('history') }}">История актов</a>
     </div>
