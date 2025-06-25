@@ -5,31 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Меню действий</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: "Segoe UI", sans-serif;
       background-color: #f5f5f5;
       color: #333;
-      padding: 40px;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
+
     .container {
-      max-width: 600px;
-      margin: auto;
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
       text-align: center;
     }
+
     h2 {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
+
+    p {
+      margin-bottom: 25px;
+    }
+
     a.button {
       display: block;
-      margin: 15px auto;
-      padding: 14px 24px;
+      margin: 12px auto;
+      padding: 14px;
       font-size: 16px;
       background-color: #2196f3;
       color: white;
       text-decoration: none;
       border-radius: 6px;
       width: 100%;
-      max-width: 350px;
+      max-width: 100%;
+      transition: background 0.2s;
+    }
+
+    a.button:hover {
+      background-color: #1976d2;
+    }
+
+    a.button.exit {
+      background-color: #777;
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        padding: 25px 15px;
+      }
+
+      a.button {
+        font-size: 15px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -39,7 +79,7 @@
     <p>Выберите действие:</p>
     <a href="{{ url_for('form') }}" class="button">Создать акт скрытых работ</a>
     <a href="{{ url_for('form_struct') }}" class="button">Создать акт промежуточной приёмки ответственных конструкций</a>
-    <a href="{{ url_for('logout') }}" class="button" style="background-color: #777">Выйти</a>
+    <a href="{{ url_for('logout') }}" class="button exit">Выйти</a>
   </div>
 </body>
 </html>
